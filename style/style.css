@@ -1,0 +1,230 @@
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input {
+  background-image: url(/style/search.png);
+  background-size: 30px 30px;
+  background-position: 6px 9px;
+  background-repeat: no-repeat;
+  width: 85%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  font-family: Poppins, sans-serif;
+}
+
+
+
+table {
+  border-collapse: collapse;
+  width: 90%;
+  font-size: 18px;
+  font-family: Poppins, sans-serif;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+table a: visited {
+    color: blue;
+}
+
+
+#Navegacion {
+  font-size: 24px;
+}
+
+img {
+  border-radius: 7%;
+  height:auto;
+}
+
+#Libros td {
+  text-align: left;
+  padding: 12px;
+}
+
+#Libro td {
+  text-align: center;
+  padding: 12px;
+}
+
+#Libros th {
+  background-color: #f1f1f1;
+}
+
+#Libros {
+  border: 1px solid #ddd
+}
+
+#Libro {
+  border: 0px solid #ddd
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+}
+
+thead {
+  text-align: left;
+  padding: 12px;
+  background-color: #f1f1f1;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+
+tr {
+  border-bottom: 1px solid #ddd;
+}
+
+
+
+header {
+  text-align: center;
+  margin-top: 5px;
+}
+
+h1 {
+  font-size: 60px;
+  background-color: white;
+  font-family: Ubuntu, sans-serif;
+
+}
+
+h1 a {
+  color: inherit;
+}
+
+.black{
+    color: black;
+    margin-left: 0%;
+}
+
+.grey{
+
+    color: grey;
+    margin-left: 0%;
+}
+
+.grey-light {
+    color: #D3D3D3;
+    margin-left: 0%;
+}
+
+#reader {
+    color: #D3D3D3;
+    margin-left: 5%;
+}
+
+h2 {
+    color: black;
+    margin-left: 16%;
+  font-family: Ubuntu, sans-serif;
+    margin-top: -1.6%;
+      font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+#load_data {
+    height:40px;
+    width:100px;
+}
+
+.topnav {
+  float: right;
+  padding: 5px 120px 0px 0px;
+  font-family: Poppins, sans-serif;
+}
+
+.topnav  a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  color: grey;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: grey;
+}
+
+    .GKindle {
+      display: inline-block;
+      background: white;
+      color: #444;
+      width: 190px;
+      border-radius: 5px;
+      border: thin solid #888;
+      box-shadow: 1px 1px 1px grey;
+      white-space: nowrap;
+    }
+    .GKindle:hover {
+      cursor: pointer;
+    }
+    span.label {
+      font-family: serif;
+      font-weight: normal;
+    }
+    span.icon {
+      background: url('/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
+      display: inline-block;
+      vertical-align: middle;
+      width: 42px;
+      height: 42px;
+    }
+    span.buttonText {
+      display: inline-block;
+      vertical-align: middle;
+      padding-left: 42px;
+      padding-right: 42px;
+      font-size: 14px;
+      font-weight: bold;
+      /* Use the Roboto font that is loaded in the <head> */
+      font-family: 'Roboto', sans-serif;
+    }
