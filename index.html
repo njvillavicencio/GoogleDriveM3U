@@ -16,8 +16,8 @@
 </nav>
     <div style="line-height:10px">
     <a href="./index.html"><img id="reader" src="./style/ereader.png" width = 52px style='float: left;'/></a>
-    <h1><span class="black"><a href="./index.html">kindle</a></span></h1>
-    <h1><a href="./index.html"><span class="grey">Digital</span> <span class="grey-light">Library </span></a></h1>
+    <h1><span class="black"><a href="./index.html">m3u</a></span></h1>
+    <h1><a href="./index.html"><span class="grey">Google</span> <span class="grey-light">Drive</span></a></h1>
     </div>
         <h2>Directly from the Cloud</h2>
     <br/>
@@ -25,8 +25,8 @@
     <button id="authorize_button" style="display: none;">Conectar Aplicación</button>
     <button id="signout_button" style="display: none;">Salir de Google</button>
     <button id="disconnect_button" style="display: none;">Desconectar Aplicación</button>
-    <button id="library_button" style="display: none;">Mi Librería</button>
-    <button id="drive_button" style="display: none;">Mi Unidad</button>
+    <button type="button" id="auth" disabled>Authenticate</button>
+    <textarea id="m3u" style="display: none"></textarea>
     <pre id="content"></pre>
 
   <a href="#" id="nextPage" style="display: none;" >Ver más &raquo;</a>
@@ -35,6 +35,8 @@
       var CLIENT_ID = '983869916425-495k0u2mf6i377r6c04d1nkleek9qbbj.apps.googleusercontent.com';
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
       var SCOPES = 'https://www.googleapis.com/auth/drive';
+      var pickerApiLoaded = false;
+      var oauthToken;
       
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -42,10 +44,10 @@
       var libraryButton = document.getElementById('library_button');
       var driveButton = document.getElementById('drive_button');
       var initialized=false;
-
       function handleClientLoad() {
         gapi.load('client:auth2', initClient);
        <!-- gapi.client.load('drive', 'v3'); -->
+       gapi.load('picker', onPickerApiLoad);
       }
        
       function initClient() {
@@ -54,38 +56,125 @@
           discoveryDocs: DISCOVERY_DOCS,
           scope: SCOPES
         }).then(function () {
+
           // Listen for sign-in state changes.
           gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
           // Handle the initial sign-in state.
           updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
           authorizeButton.onclick = handleAuthClick;
           signoutButton.onclick = handleSignoutClick;
           disconnectButton.onclick = disconnect;
-          libraryButton.setAttribute("onclick","location.href = './index1.html';");
-          driveButton.setAttribute("onclick","location.href = './index2.html';");
+          //gapi.auth2.authorize({client_id: CLIENT_ID, scope: SCOPES}, handleAuthResult);
         });
       }
+
       /**
        *  Called when the signed in status changes, to update the UI
        *  appropriately. After a sign-in, the API is called.
        */
       function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
-          
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           disconnectButton.style.display = 'block';
-          libraryButton.style.display = 'block';
-          driveButton.style.display = 'block';
+          var authBtn = document.getElementById('auth');
+          authBtn.disabled = false;
+         authBtn.setAttribute("onclick","createPicker()");
+         oauthToken = gapi.auth.getToken().access_token;
+          
         } 
         else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
           disconnectButton.style.display = 'none';
-          libraryButton.style.display = 'block';
-          driveButton.style.display = 'block';
         }
       }
+
+      function listFiles(nextPageToken,query) {
+        gapi.client.drive.files.list({
+          pageSize: 10, //no puede ser menor a 4
+          'pageToken': nextPageToken,
+          includeTeamDrives : true,
+          fields: "nextPageToken, files(id, name, mimeType, fileExtension, webContentLink, parents, properties)",
+          q: query
+        }).then(function(response) {
+          var files = response.result.files;
+          if (files && files.length > 0) {
+            var nextPageToken2=response.result.nextPageToken;
+            
+
+            //var nextPage = document.getElementById("nextPage");
+            //if (response.result.nextPageToken){
+            //  nextPage.style.display="block";
+            //  nextPage.setAttribute("onclick","listFiles('"+response.result.nextPageToken+"',"+'"'+query+'"'+")");
+            //}
+           // else{
+            //  nextPage.style.display="none";
+            //}
+
+          for (var i = 0; i < files.length; i++) {
+          
+            var file = files[i]; 
+            if (file.mimeType="application/vnd.google-apps.folder"){
+              listFiles(nextPageToken2,"'"+file.id+"' in parents'")
+            }
+            else if (file.mimeType.indexOf("image")!=-1){
+              console.log(file.name);
+
+            }
+            else if (file.mimeType.indexOf("video")!=-1){
+              console.log(file.name);
+            }
+          }
+            buildJson2(files);
+          }
+        });
+      }
+
+
+      function buildJson2(files) {
+        var m3u="";
+        for (var i = 0; i < files.length; i++) {
+          
+          var file = files[i]; 
+          m3u = m3u + file.name+"\n";
+      }
+      document.getElementById("m3u").value=m3u;
+      document.getElementById("m3u").style.display="block";
+      }
+
+      function onPickerApiLoad() {
+        pickerApiLoaded = true;
+      
+      }
+
+    function createPicker() {
+    if (pickerApiLoaded && oauthToken) {
+      var view = new google.picker.DocsView()
+              .setOwnedByMe(true)
+              .setIncludeFolders(true)
+              .setSelectFolderEnabled(true)
+              .setMimeTypes('application/vnd.google-apps.folder');
+      var picker = new google.picker.PickerBuilder()
+              .enableFeature(google.picker.Feature.NAV_HIDDEN)
+              .setTitle('Select a folder to use for the playlist')
+              .addView(view)
+              .setOAuthToken(oauthToken)
+              // .setDeveloperKey('AIzaSyAksMFVtrWBKqN2gaDnP29FdpB3omikrQU')
+              .setCallback(pickerCallback)
+              .build();
+      picker.setVisible(true);
+    }
+  }
+
+
+    function pickerCallback(data) {
+    if (data.action == google.picker.Action.PICKED) {
+      query="'"+data.docs[0].id+"' in parents and mimeType='application/vnd.google-apps.folder'";
+      listFiles("",query);
+    }
+  }
       /**
        *  Sign in the user upon button click.
        */
@@ -106,8 +195,6 @@
           signoutButton.click();
         });
       }
-
-
       
     </script>
 
