@@ -171,28 +171,25 @@
         var m3u="#EXTM3U"+"\n\n";
         for (var i = 0; i < files.length; i++) {
           var file = files[i]; 
-        if (file.mimeType.indexOf("video") != -1) {
-          video=file.id;
-        } 
-        else if (file.mimeType.indexOf("image") != -1) {
-          logo=file.id;
-        }
-        if (parent==file.parents[0]) {       
+          if (file.mimeType.indexOf("video") != -1) {
+            video=file.id;
+          } 
+          else if (file.mimeType.indexOf("image") != -1) {
+            logo=file.id;
+          }
+          if (parent==file.parents[0]) {       
             videoLink=PATH + video + q + API_KEY;
-            if (logo!="") {
-              logoLink=PATH + logo + q + API_KEY;
-              m3u+= '#EXTINF:-1 tvg-logo="'+logoLink+'"'+" group-title='Movies' type='video', "+file.name+"\n" + videoLink + "\n\n\n";
-            }
-            else {
-              m3u+= "#EXTINF:-1 group-title='Movies' type='video', "+file.name+"\n" + vodeLink + "\n\n\n";
-            }
-
-        }
-      }
-       else {
-         parent=file.parents[0];
-       }
-        
+              if (logo!="") {
+                logoLink=PATH + logo + q + API_KEY;
+                m3u+= '#EXTINF:-1 tvg-logo="'+logoLink+'"'+" group-title='Movies' type='video', "+file.name+"\n" + videoLink + "\n\n\n";
+              }
+              else {
+                m3u+= "#EXTINF:-1 group-title='Movies' type='video', "+file.name+"\n" + vodeLink + "\n\n\n";
+              }
+          }   
+         else {
+           parent=file.parents[0];
+         }
        document.getElementById("m3u").value=m3u;
        document.getElementById("m3u").style.display="block";
       }
