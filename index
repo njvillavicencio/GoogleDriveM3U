@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Libros</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./style/style.css" />
+    <link rel="icon" sizes="200x200" type="image/png" href="./style/books.png">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <nav class="topnav">
+    <a href="./index.html">Home</a> 
+  <a href="./index1.html">Library</a>
+  <a href="./index2.html">Drive</a>
+</nav>
+    <div style="line-height:10px">
+    <a href="./index.html"><img id="reader" src="./style/ereader.png" width = 52px style='float: left;'/></a>
+    <h1><span class="black"><a href="./index.html">m3u</a></span></h1>
+    <h1><a href="./index.html"><span class="grey">Google</span> <span class="grey-light">Drive</span></a></h1>
+    </div>
+        <h2>Directly from the Cloud</h2>
+    <br/>
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Conectar Aplicación</button>
+    <button id="signout_button" style="display: none;">Salir de Google</button>
+    <button id="disconnect_button" style="display: none;">Desconectar Aplicación</button>
+    <button type="button" id="auth" disabled>Authenticate</button>
+    <textarea id="m3u" style="display: none"></textarea>
+    <pre id="content"></pre>
+
+  <a href="#" id="nextPage" style="display: none;" >Ver más &raquo;</a>
+
+    <script type="text/javascript">
+      var CLIENT_ID = '983869916425-495k0u2mf6i377r6c04d1nkleek9qbbj.apps.googleusercontent.com';
+      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+      var SCOPES = 'https://www.googleapis.com/auth/drive';
+      var pickerApiLoaded = false;
+      var API_KEY = 'AIzaSyBa-rF9qjubzf5GM0I5vI847KeXv-0TS5A';
+      var PATH="https://www.googleapis.com/drive/v3/files/"
+      var q="?alt=media&key=";
+      var oauthToken;
+      
+      var authorizeButton = document.getElementById('authorize_button');
+      var signoutButton = document.getElementById('signout_button');
+      var disconnectButton = document.getElementById('disconnect_button');
+      var libraryButton = document.getElementById('library_button');
+      var driveButton = document.getElementById('drive_button');
+      var initialized=false;
+      function handleClientLoad() {
+
+        gapi.load('client:auth2', initClient);
+       <!-- gapi.client.load('drive', 'v3'); -->
+       gapi.load('picker', onPickerApiLoad);
+
+
+      }
+       
+      function initClient() {
+        gapi.client.init({
+          clientId: CLIENT_ID,
+          discoveryDocs: DISCOVERY_DOCS,
+          scope: SCOPES
+        }).then(function () {
+
+          // Listen for sign-in state changes.
+          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+          // Handle the initial sign-in state.
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          authorizeButton.onclick = handleAuthClick;
+          signoutButton.onclick = handleSignoutClick;
+          disconnectButton.onclick = disconnect;
+          //gapi.auth2.authorize({client_id: CLIENT_ID, scope: SCOPES}, handleAuthResult);
+        });
+      }
+
+      /**
+       *  Called when the signed in status changes, to update the UI
+       *  appropriately. After a sign-in, the API is called.
+       */
+      function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+          authorizeButton.style.display = 'none';
+          signoutButton.style.display = 'block';
+          disconnectButton.style.display = 'block';
+          var authBtn = document.getElementById('auth');
+          authBtn.disabled = false;
+         authBtn.setAttribute("onclick","createPicker()");
+         oauthToken = gapi.auth.getToken().access_token;
+          
+        } 
+        else {
+          authorizeButton.style.display = 'block';
+          signoutButton.style.display = 'none';
+          disconnectButton.style.display = 'none';
+        }
+      }
+
+      function shorten(link){
+      gapi.client.setApiKey(API_KEY);
+       gapi.client.load('urlshortener', 'v1',function(){});
+        var request = gapi.client.urlshortener.url.insert({'resource': {'longUrl': link}
+        });
+        request.execute(function(response) {      
+          if((response.id != null)){
+            console.log(response.id);
+        }
+      });
+
+
+      }
+
+
+      function listFiles(query,nextPageToken="",fileType="",currentLevelFolderList=[],folderList=[]) {
+        gapi.client.drive.files.list({
+          pageSize: 1000, //no puede ser menor a 4
+          'pageToken': nextPageToken,
+          includeTeamDrives : true,
+          fields: "nextPageToken, files(id, name, mimeType, fileExtension, webContentLink, parents, properties)",
+          orderBy:"name,folder",
+          q: query
+        }).then(function(response) {
+          var files = response.result.files.concat(currentLevelFolderList);
+          if (response.result.nextPageToken && fileType=="folder"){
+            listFiles(query, response.result.nextPageToken, "folder", files);
+          }
+          else{
+            if (files && files.length > 0 && fileType=="video") {
+              buildM3U(files);
+            }
+            else if (files && files.length > 0) {
+              var query;
+              for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (i==0){
+                  query="('"+file.id+"' in parents";
+                }
+                else {
+                  query+=" or '"+file.id+"' in parents";
+                }         
+              }
+              query+=") and mimeType='application/vnd.google-apps.folder'";
+              files=folderList.concat(files);
+              listFiles(query,"","folder",[],files);
+            }
+            else {
+              files=folderList;
+              for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (i==0){
+                  query="('"+file.id+"' in parents";
+                }
+                else {
+                  query+=" or '"+file.id+"' in parents";
+                }         
+              }
+              query+=") and (mimeType contains 'video' or mimeType contains 'image')";
+              var delayInMilliseconds = 1000; //1 second
+              setTimeout(listFiles(query,"","video"), delayInMilliseconds); 
+              
+            }
+          }
+        });
+      }
+
+      function buildM3U(files) {
+        var m3u="#EXTM3U"+"\n\n";
+        for (var i = 0; i < files.length; i++) {       
+          var file = files[i]; 
+          link=PATH + file.id + q + API_KEY;
+          m3u+= "#EXTINF:-1 group-title='Movies' type='video', "+file.name+"\n" + link + "\n\n\n" + file.mimeType;
+        }
+      document.getElementById("m3u").value=m3u;
+      document.getElementById("m3u").style.display="block";
+      }
+
+      function onPickerApiLoad() {
+        pickerApiLoaded = true;
+      
+      }
+
+    function createPicker() {
+    if (pickerApiLoaded && oauthToken) {
+      var view = new google.picker.DocsView()
+              .setOwnedByMe(true)
+              .setIncludeFolders(true)
+              .setSelectFolderEnabled(true)
+              .setMimeTypes('application/vnd.google-apps.folder');
+      var picker = new google.picker.PickerBuilder()
+              .enableFeature(google.picker.Feature.NAV_HIDDEN)
+              .setTitle('Select a folder to use for the playlist')
+              .addView(view)
+              .setOAuthToken(oauthToken)
+              // .setDeveloperKey('AIzaSyAksMFVtrWBKqN2gaDnP29FdpB3omikrQU')
+              .setCallback(pickerCallback)
+              .build();
+      picker.setVisible(true);
+    }
+  }
+
+
+    function pickerCallback(data) {
+    if (data.action == google.picker.Action.PICKED) {
+      query="'"+data.docs[0].id+"' in parents and mimeType='application/vnd.google-apps.folder'";
+      listFiles(query,"","folder",[],data.docs);
+    }
+  }
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick(event) {
+        initialized=true;
+        gapi.auth2.getAuthInstance().signIn({ux_mode: "redirect"});
+      }
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut().then(function () {
+          location.reload();
+        }); 
+      }
+      function disconnect(event) {
+        gapi.auth2.getAuthInstance().disconnect().then(function () {
+          signoutButton.click();
+        });
+      }
+      
+    </script>
+
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
+</html>
