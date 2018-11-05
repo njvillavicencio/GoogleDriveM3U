@@ -230,6 +230,7 @@ a {
     }
     textarea {
         display: block;
-        margin-left: 20%;
-        margin-right: 20%;
+        resize: none;
+        width: 80%;
+        margin-left: 10%;
     }
