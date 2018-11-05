@@ -228,3 +228,8 @@ a {
       /* Use the Roboto font that is loaded in the <head> */
       font-family: 'Roboto', sans-serif;
     }
+    textarea {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
