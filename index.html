@@ -41,9 +41,7 @@
       var q="?alt=media&key=";
       var oauthToken;
       
-      var authorizeButton = document.getElementById('authorize_button');
-      var signoutButton = document.getElementById('signout_button');
-      var disconnectButton = document.getElementById('disconnect_button');
+
       var login = document.getElementById('login');
       var connect = document.getElementById('connect');
       var initialized=false;
@@ -68,9 +66,7 @@
 
           // Handle the initial sign-in state.
           updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-          authorizeButton.onclick = handleAuthClick;
-          signoutButton.onclick = handleSignoutClick;
-          disconnectButton.onclick = disconnect;
+
           //login.href="javascript:handleAuthClick()";
           
           
@@ -87,9 +83,7 @@
           login.href="javascript:handleSignoutClick()";
           login.innerHTML="Log out";
           connect.href="javascript:disconnect()";
-          authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
-          disconnectButton.style.display = 'block';
+
           var authBtn = document.getElementById('auth');
           authBtn.disabled = false;
          authBtn.setAttribute("onclick","createPicker()");
@@ -99,25 +93,11 @@
         else {
           login.href="javascript:handleAuthClick()";
           login.innerHTML="Log in";
-          authorizeButton.style.display = 'block';
-          signoutButton.style.display = 'none';
-          disconnectButton.style.display = 'none';
+
         }
       }
 
-      function shorten(link){
-      gapi.client.setApiKey(API_KEY);
-       gapi.client.load('urlshortener', 'v1',function(){});
-        var request = gapi.client.urlshortener.url.insert({'resource': {'longUrl': link}
-        });
-        request.execute(function(response) {      
-          if((response.id != null)){
-            console.log(response.id);
-        }
-      });
 
-
-      }
 
 
       function listFiles(query,nextPageToken="",fileType="",currentLevelFolderList=[],folderList=[]) {
