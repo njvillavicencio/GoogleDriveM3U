@@ -11,7 +11,7 @@
   <body>
     <nav class="topnav">
     <a id="home" href="./index.html">Home</a> 
-    <a id="login">Login</a>
+    <a id="login">Log in</a>
     <a id="connect">Disconnect</a>
 </nav>
     <div style="line-height:10px">
@@ -72,7 +72,7 @@
           signoutButton.onclick = handleSignoutClick;
           disconnectButton.onclick = disconnect;
           login.href="javascript:handleAuthClick()";
-          connect.href="javascript:disconnect()";
+          
           
           //gapi.auth2.authorize({client_id: CLIENT_ID, scope: SCOPES}, handleAuthResult);
         });
@@ -85,7 +85,8 @@
       function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
           login.href="javascript:handleSignoutClick()";
-          login.innerHTML="Sign out";
+          login.innerHTML="Log out";
+          connect.href="javascript:disconnect()";
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           disconnectButton.style.display = 'block';
@@ -97,7 +98,7 @@
         } 
         else {
           login.href="javascript:handleAuthClick()";
-          login.innerHTML="Login";
+          login.innerHTML="Log in";
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
           disconnectButton.style.display = 'none';
