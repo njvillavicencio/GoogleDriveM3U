@@ -11,8 +11,8 @@
   <body>
     <nav class="topnav">
     <a id="home" href="./index.html">Home</a> 
-  <a id="login" href="javascript:handleAuthClick()">Log-in</a>
-  <a id="connect" href="javascript:disconnect()">Connect</a>
+  <a id="login">Log-in</a>
+  <a id="connect">Connect</a>
 </nav>
     <div style="line-height:10px">
     <a href="./index.html"><img id="reader" src="./style/tv.png" width = 65px style='float: left;'/></a>
@@ -44,8 +44,8 @@
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
       var disconnectButton = document.getElementById('disconnect_button');
-      var libraryButton = document.getElementById('library_button');
-      var driveButton = document.getElementById('drive_button');
+      var login = document.getElementById('login');
+      var connect = document.getElementById('connect');
       var initialized=false;
       function handleClientLoad() {
 
@@ -71,6 +71,9 @@
           authorizeButton.onclick = handleAuthClick;
           signoutButton.onclick = handleSignoutClick;
           disconnectButton.onclick = disconnect;
+          login.href="javascript:handleAuthClick";
+          connect.href="javascript:disconnect()";
+          
           //gapi.auth2.authorize({client_id: CLIENT_ID, scope: SCOPES}, handleAuthResult);
         });
       }
