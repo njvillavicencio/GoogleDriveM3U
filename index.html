@@ -171,6 +171,7 @@
             videoFiles[file.parents[0]][2]=file.id;
           }
         } 
+        console.log(videoFiles);
         buildM3U2(videoFiles);
       }
       function buildM3U2(videoFiles) {
@@ -180,6 +181,7 @@
         var m3u="#EXTM3U"+"\n\n";
         for (var i = 0; i < keys.length; i++) {
           var file = videoFiles[i]; 
+          console.log(file);
           var video=videoFiles[file][1];
           var logo=videoFiles[file][2];
           var name=videoFiles[file][0];
