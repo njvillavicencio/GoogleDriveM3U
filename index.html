@@ -171,11 +171,10 @@
             videoFiles[file.parents[0]][2]=file.id;
           }
         } 
-        console.log(videoFiles);
         buildM3U2(videoFiles);
       }
       function buildM3U2(videoFiles) {
-        var keys = Object.keys(videoFiles)
+        var keys = Object.keys(videoFiles);
         var video="";
         var logo="";
         var m3u="#EXTM3U"+"\n\n";
