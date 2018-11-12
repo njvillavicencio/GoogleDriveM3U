@@ -153,7 +153,11 @@
       }
       
       function buildM3U(files,folderList) {
-        console.log(folderList);
+        var videoFilesTitles={};
+        for (var i = 0; i<folderList.length; i++){
+          var key=Object.keys(folderList[i]);
+          videoFilesTitles[key]=folderList[i].name;
+        }
         var videoFiles={};
         var parents=[];
         var video="";
@@ -166,7 +170,7 @@
           videoFiles[file.parents[0]]=videoInfo;
           if (file.mimeType.indexOf("video") != -1) {
             videoFiles[file.parents[0]][1]=file.id;
-            videoFiles[file.parents[0]][0]=file.name; 
+            videoFiles[file.parents[0]][0]=videoFilesTitles[file.parents[0]]; 
           } 
           else if (file.mimeType.indexOf("image") != -1) {
             videoFiles[file.parents[0]][2]=file.id;
