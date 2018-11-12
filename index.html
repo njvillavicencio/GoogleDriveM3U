@@ -158,7 +158,6 @@
           var key=folderList[i].id;
           videoFilesTitles[key]=folderList[i].name;
         }
-        console.log(videoFilesTitles);
         var videoFiles={};
         var parents=[];
         var video="";
@@ -177,6 +176,7 @@
             videoFiles[file.parents[0]][2]=file.id;
           }
         } 
+        console.log(videoFiles);
         buildM3U2(videoFiles);
       }
       function buildM3U2(videoFiles) {
