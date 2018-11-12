@@ -153,9 +153,11 @@
       }
       
       function buildM3U(files,folderList) {
+        console.log(folderList);
         var videoFilesTitles={};
         for (var i = 0; i<folderList.length; i++){
           var key=Object.keys(folderList[i]);
+          console.log(key);
           videoFilesTitles[key]=folderList[i].name;
         }
         console.log(videoFilesTitles);
