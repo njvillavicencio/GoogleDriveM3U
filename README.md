@@ -9,4 +9,4 @@ If you want to include TV logos to your playlist, it is required that these logo
 
 For instance, suppose you have a folder called "Titanic". If you have a video file named "Titanic-1080p" stored in "Titanic", then the logo file that matches this video file must be named exactly the same way, ie, "Titanic-1080p" and be stored in "Titanic".
 
-# Important: All video files and logos you want to include in this list must be shared using at least the option "On - Anyone with the link". This way your player has access to your files.
+Important: All video files and logos you want to include in this list must be shared using at least the option "On - Anyone with the link". This way your player has access to your files.
