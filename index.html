@@ -163,9 +163,13 @@
         var video="";
         var logo="";
         var name="";
+        var keys=[];
         for (var i = 0; i < files.length; i++) {
           var file = files[i]; 
-          videoFiles[file.parents[0]]={"video":"","title":"","logo":""};
+          keys = Object.keys(videoFiles);
+          if (keys.indexOf(file.parents[0])<0){
+            videoFiles[file.parents[0]]={"video":"","title":"","logo":""};
+          }
           if (file.mimeType.indexOf("video") != -1) {
             videoFiles[file.parents[0]].video=file.id;
             videoFiles[file.parents[0]].title=videoFilesTitles[file.parents[0]]; 
