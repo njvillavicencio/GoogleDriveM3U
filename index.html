@@ -166,7 +166,7 @@
           else if (file.mimeType.indexOf("image") != -1) {
             logo=file.id;
           }
-          if (count==files.length) {       
+          if (count==files.length and video!="") {       
             videoLink=PATH + video + q + API_KEY;
             if (logo!="") {
               logoLink=PATH + logo + q + API_KEY;
