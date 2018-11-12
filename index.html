@@ -115,7 +115,7 @@
           }
           else{
             if (files && files.length > 0 && fileType=="video") {
-              buildM3U(files);
+              buildM3U(files,folderList);
             }
             else if (files && files.length > 0) {
               var query;
@@ -145,14 +145,15 @@
               }
               query+=") and (mimeType contains 'video' or mimeType contains 'image')";
               var delayInMilliseconds = 1000; //1 second
-              setTimeout(listFiles(query,"","video"), delayInMilliseconds); 
+              setTimeout(listFiles(query,"","video",[],folderList), delayInMilliseconds); 
               
             }
           }
         });
       }
       
-      function buildM3U(files) {
+      function buildM3U(files,folderList) {
+        console.log(folderList);
         var videoFiles={};
         var parents=[];
         var video="";
