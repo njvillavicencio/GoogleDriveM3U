@@ -151,31 +151,49 @@
           }
         });
       }
-
+      
       function buildM3U(files) {
+        var videoFiles={};
+        var parents=[];
         var video="";
         var logo="";
-        var count=0;
+        var name="";
+        var videoInfo=[name,video,logo];
         var m3u="#EXTM3U"+"\n\n";
         for (var i = 0; i < files.length; i++) {
-          count+=1;
           var file = files[i]; 
+          videoFiles[file.parents[0]]=videoInfo;
           if (file.mimeType.indexOf("video") != -1) {
-            video=file.id;
+            videoFiles[file.parents[0]][1]=file.id;
+            videoFiles[file.parents[0]][0]=file.name; 
           } 
           else if (file.mimeType.indexOf("image") != -1) {
-            logo=file.id;
+            videoFiles[file.parents[0]][2]=file.id;
           }
-          if (count==files.length && video!="") {       
+        } 
+        buildM3U2(videoFiles);
+      }
+      function buildM3U2(videoFiles) {
+        var keys = Object.keys(videoFiles)
+        var video="";
+        var logo="";
+        var m3u="#EXTM3U"+"\n\n";
+        for (var i = 0; i < keys.length; i++) {
+          var file = videoFiles[i]; 
+          var video=videoFiles[file][1];
+          var logo=videoFiles[file][2];
+          var name=videoFiles[file][0];
+          if (video!="") {       
             videoLink=PATH + video + q + API_KEY;
             if (logo!="") {
               logoLink=PATH + logo + q + API_KEY;
-              m3u+= '#EXTINF:-1 tvg-logo="'+logoLink+'"'+" group-title='Movies' type='video', "+file.name+"\n" + videoLink + "\n\n\n";
+              m3u+= '#EXTINF:-1 tvg-logo="'+logoLink+'"'+" group-title='Movies' type='video', "+name+"\n" + videoLink + "\n\n\n";
             }
             else {
-              m3u+= "#EXTINF:-1 group-title='Movies' type='video', "+file.name+"\n" + videoLink + "\n\n\n";
+              m3u+= "#EXTINF:-1 group-title='Movies' type='video', "+name+"\n" + videoLink + "\n\n\n";
             }
-          }   
+          } 
+
         }  
         document.getElementById("m3u").value=m3u;
         document.getElementById("m3u").style.display="block";
