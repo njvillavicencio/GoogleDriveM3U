@@ -163,20 +163,18 @@
         var video="";
         var logo="";
         var name="";
-        var videoInfo=[name,video,logo];
-        var m3u="#EXTM3U"+"\n\n";
+        var videoInfo={"video":"","title":"","logo":""};
         for (var i = 0; i < files.length; i++) {
           var file = files[i]; 
           videoFiles[file.parents[0]]=videoInfo;
           if (file.mimeType.indexOf("video") != -1) {
-            videoFiles[file.parents[0]][1]=file.id;
-            videoFiles[file.parents[0]][0]=videoFilesTitles[file.parents[0]]; 
+            videoFiles[file.parents[0]].video=file.id;
+            videoFiles[file.parents[0]].title=videoFilesTitles[file.parents[0]]; 
           } 
           else if (file.mimeType.indexOf("image") != -1) {
-            videoFiles[file.parents[0]][2]=file.id;
+            videoFiles[file.parents[0]].logo=file.id;
           }
         } 
-        console.log(videoFiles);
         buildM3U2(videoFiles);
       }
       function buildM3U2(videoFiles) {
@@ -186,9 +184,9 @@
         var m3u="#EXTM3U"+"\n\n";
         for (var i = 0; i < keys.length; i++) {
           var file = keys[i]; 
-          var video=videoFiles[file][1];
-          var logo=videoFiles[file][2];
-          var name=videoFiles[file][0];
+          var video=videoFiles[file].video;
+          var logo=videoFiles[file].logo;
+          var name=videoFiles[file].title;
           if (video!="") {       
             videoLink=PATH + video + q + API_KEY;
             if (logo!="") {
