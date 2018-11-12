@@ -163,10 +163,10 @@
         var video="";
         var logo="";
         var name="";
-        var videoInfo={"video":"","title":"","logo":""};
         for (var i = 0; i < files.length; i++) {
           var file = files[i]; 
-          videoFiles[file.parents[0]]=videoInfo;
+          console.log(file);
+          videoFiles[file.parents[0]]={"video":"","title":"","logo":""};
           if (file.mimeType.indexOf("video") != -1) {
             videoFiles[file.parents[0]].video=file.id;
             videoFiles[file.parents[0]].title=videoFilesTitles[file.parents[0]]; 
@@ -174,7 +174,8 @@
           else if (file.mimeType.indexOf("image") != -1) {
             videoFiles[file.parents[0]].logo=file.id;
           }
-        } 
+        }
+        console.log(videoFiles);
         buildM3U2(videoFiles);
       }
       function buildM3U2(videoFiles) {
