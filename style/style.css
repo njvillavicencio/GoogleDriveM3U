@@ -235,3 +235,7 @@ a {
         margin-left: 10%;
         height: 400px
     }
+
+#result {
+  margin: 0 auto;
+}
