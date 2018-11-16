@@ -27,6 +27,7 @@
     <button id="disconnect_button" style="display: none;">Desconectar Aplicación</button>
     <button type="button" id="auth" disabled>Authenticate</button>
     <textarea id="m3u" style="display: none"></textarea>
+    <div id="loadingGif" style="display:none"><img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"></div>
     <pre id="content"></pre>
 
   <a href="#" id="nextPage" style="display: none;" >Ver más &raquo;</a>
@@ -153,6 +154,7 @@
       }
       
       function buildM3U(files,folderList) {
+        document.getElementById('loadingGif').style.display = "block";
         var videoFilesTitles={};
         for (var i = 0; i<folderList.length; i++){
           var key=folderList[i].id;
@@ -201,8 +203,9 @@
             }
           } 
 
-        }  
+        }
         document.getElementById("m3u").value=m3u;
+        document.getElementById('loadingGif').style.display = "none";
         document.getElementById("m3u").style.display="block";
       }
 
