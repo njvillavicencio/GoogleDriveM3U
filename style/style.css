@@ -236,6 +236,9 @@ a {
         height: 400px
     }
 
-#result {
-  margin: 0 auto;
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
