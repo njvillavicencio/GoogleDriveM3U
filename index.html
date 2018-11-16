@@ -237,7 +237,7 @@
     function pickerCallback(data) {
     if (data.action == google.picker.Action.PICKED) {
       query="'"+data.docs[0].id+"' in parents and mimeType='application/vnd.google-apps.folder'";
-      document.getElementById('result').innerHTML = '<img src="./style/loading.gif" width = 90px>';
+      document.getElementById('result').innerHTML = '<img src="./style/loading.gif" class="center" width = 90px>';
       document.getElementById('result').style.display = "block";
       listFiles(query,"","folder",[],data.docs);
     }
