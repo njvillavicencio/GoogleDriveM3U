@@ -211,6 +211,7 @@
       }
 
     function createPicker() {
+      console.log(pickerApiLoader);
     if (pickerApiLoaded && oauthToken) {
       document.getElementById('result').style.display = "none";
       var view = new google.picker.DocsView()
@@ -229,7 +230,7 @@
       picker.setVisible(true);
     }
       
-    else {
+    else if (pickerApiLoaded) {
       handleAuthClick();
     }
   }
